@@ -2,18 +2,22 @@ window.onload = function(){
   jogoInicio();
   document.querySelector("#direita").addEventListener("click", function(){
      right();
+     setTimeout(parar, 500);
   });
 
    document.querySelector("#esquerda").addEventListener("click", function(){
      left();
+     setTimeout(parar, 500);
   });
 
    document.querySelector("#subir").addEventListener("click", function(){
      sobe();
+     setTimeout(parar, 500);
   });
 
    document.querySelector("#descer").addEventListener("click", function(){
      desce();
+     setTimeout(parar, 500);
   });
 }
 
@@ -35,6 +39,7 @@ let jogoArea = {
      this.canvas.height = 300,
      this.context = this.canvas.getContext("2d");
      document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+     this.frame = 0;
      this.intervalo = setInterval(jogoAtualizar, 20);
    },
    limpa: function(){
@@ -86,10 +91,17 @@ function componentes(cor, x, y, altura, largura){
 }
 
 function jogoAtualizar(){
+  let x,y;
+  if(i = 0; i<obstaculos.length; i++){
+    if(personagemObj.bater(obstaculos)){
+      areaJogo.parar();
+      return;
+  }
   if(personagemObj.colisao(obstaculos)){
     jogoArea.stop();
   }else{
   jogoArea.limpa();
+  obstaculos.x += 1;
   obstaculos.atualizar();
   personagemObj.posicaoNova();
   personagemObj.atualizar();
@@ -111,4 +123,16 @@ function right(){
 
 function left(){
   personagemObj.veloX -= 1;
+}
+function parar(){
+  personagemObj.veloX = 0;
+  personagemObj.veloY = 0;
+}
+
+function contIntervalo(n){
+  if((areaJogo.frame/ n) % 1 == 0){
+    return true
+  }else{
+    return false
+  }
 }
