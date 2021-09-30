@@ -2,35 +2,41 @@ window.onload = function(){
   jogoInicio();
   document.querySelector("#direita").addEventListener("click", function(){
      right();
-     setTimeout(parar, 500);
+     setTimeout(stop, 1000);
   });
 
    document.querySelector("#esquerda").addEventListener("click", function(){
      left();
-     setTimeout(parar, 500);
+     setTimeout(stop, 1000);
   });
 
    document.querySelector("#subir").addEventListener("click", function(){
      sobe();
-     setTimeout(parar, 500);
+     setTimeout(stop, 1000);
   });
 
    document.querySelector("#descer").addEventListener("click", function(){
      desce();
-     setTimeout(parar, 500);
+     setTimeout(stop, 1000);
+  });
+
+  document.querySelector("#reset").addEventListener("click", function(){
+     reload();
   });
 }
 
 var personagemObj;
 
-var obstaculos;
+var obtc = [];
+
+var pontos;
 
 
 function jogoInicio(){
   jogoArea.start();
-  personagemObj = new componentes("blue", 10, 120, 30, 30);
-  obstaculos = new componentes('pink', 120, 80, 10, 100);
-
+  personagemObj = new componentes("orange", 10, 120, 30, 30);
+  pontos = new componentes("yellow", 30, 30, 'Consolas', '30px', 'texto');
+  //obtc = new componentes('blue', 120, 80, 10, 100);
 }
 
 let jogoArea = {
@@ -50,17 +56,33 @@ let jogoArea = {
    }
 }
 
-function componentes(cor, x, y, altura, largura){
+function contarI(n){
+  if((jogoArea.frame / n ) % 1 == 0) {
+    return true;
+  }else { 
+    return false;
+  }
+}
+
+function componentes(cor, x, y, largura, altura, tipo){
+      this.tipo = tipo,
       this.altura = altura,
       this.largura = largura,
+      this.texto = 0,
       this.x = x,
       this.y = y,
       this.veloX = 0,
       this.veloY = 0,
       this.atualizar = function(){
       contexto = jogoArea.context;
+      if(this.tipo == 'texto'){
+      contexto.font = this.altura + " " + this.largura;  
+      contexto.fillStyle = cor;
+      contexto.fillText(this.texto, this.x, this.y);
+      }else{
       contexto.fillStyle = cor,
       contexto.fillRect(this.x, this.y, this.altura, this.largura);
+      }
       },
       this.posicaoNova = function(){
         this.x += this.veloX;
@@ -91,23 +113,46 @@ function componentes(cor, x, y, altura, largura){
 }
 
 function jogoAtualizar(){
-  let x,y;
-  if(i = 0; i<obstaculos.length; i++){
-    if(personagemObj.bater(obstaculos)){
-      areaJogo.parar();
-      return;
-  }
-  if(personagemObj.colisao(obstaculos)){
+  let x, y;
+
+  for(i = 0 ; i < obtc.length; i++){
+    if(personagemObj.colisao(obtc[i])){
     jogoArea.stop();
-  }else{
+    return;
+     }
+  }
+  
   jogoArea.limpa();
-  obstaculos.x += 1;
-  obstaculos.atualizar();
-  personagemObj.posicaoNova();
-  personagemObj.atualizar();
+  jogoArea.frame += 1;
+
+  if(jogoArea.frame == 1 || contarI(150)) {
+   x = jogoArea.canvas.width;
+   miniAltura = 20;
+   maxAltura = 200; 
+   altura = Math.floor (Math.random() * (maxAltura - miniAltura + 1 ) + miniAltura);
+   minVazio = 50
+   maxVazio = 200;
+   vazio = Math.floor(Math.random() * (maxVazio - minVazio + 1) + minVazio);
+   //y = jogoArea.canvas.height - 200;
+   obtc.push(new componentes('blue', x, 3 , altura, 12));
+   obtc.push(new componentes('blue', x, altura  + vazio , x - altura - vazio, 13));
   }
 
+  //osbtaculos.atualizar();
+
+  for(i = 0; i < obtc.length; i++) {
+    obtc[i].x += -1;
+    obtc[i].atualizar();
+  }
+
+  pontos.texto = "SCORE: " + jogoArea.frame;
+  pontos.atualizar();
+  personagemObj.posicaoNova();
+  personagemObj.atualizar();
+ 
+
 }
+
 
 function sobe(){
   personagemObj.veloY -= 1;
@@ -124,15 +169,12 @@ function right(){
 function left(){
   personagemObj.veloX -= 1;
 }
-function parar(){
+
+function stop() {
   personagemObj.veloX = 0;
   personagemObj.veloY = 0;
 }
 
-function contIntervalo(n){
-  if((areaJogo.frame/ n) % 1 == 0){
-    return true
-  }else{
-    return false
-  }
+function reload() {
+location.reload();
 }
