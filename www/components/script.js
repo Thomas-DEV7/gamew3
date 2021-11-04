@@ -1,5 +1,28 @@
 window.onload = function(){
   jogoInicio();
+
+function config(){
+  let claro = {
+    canvas: "white"
+
+  }
+  let escuro = {
+
+  }
+}
+config();
+  document.querySelector("#temaEscuro").addEventListener("click", function(){
+    document.querySelector("#reset").style.color = "white";
+    document.querySelector("canvas").style.backgroundColor = "grey";
+    document.querySelector("body").style.backgroundColor = "black";
+
+  });
+
+    document.querySelector("#temaClaro").addEventListener("click", function(){
+    document.querySelector("#reset").style.color = "black";
+    document.querySelector("canvas").style.backgroundColor = "cyan";      document.querySelector("body").style.backgroundColor = "white";
+  });
+
   document.querySelector("#direita").addEventListener("click", function(){
      right();
      setTimeout(stop, 1000);
@@ -178,3 +201,7 @@ function stop() {
 function reload() {
 location.reload();
 }
+ document.querySelector("#descer").addEventListener("click", function(){
+     desce();
+     setTimeout(stop, 1000);
+  });
