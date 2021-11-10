@@ -3,24 +3,33 @@ window.onload = function(){
 
 function config(){
   let claro = {
-    canvas: "white"
-
+    canvas: "cyan",
+    body: "white",
+    reset: "green"
   }
+  localStorage.setItem("claro", JSON.stringify(claro));
   let escuro = {
-
+    canvas: "grey",
+    body: "black",
+    reset: "white"
   }
+  localStorage.setItem("escuro", JSON.stringify(escuro));
+
 }
 config();
   document.querySelector("#temaEscuro").addEventListener("click", function(){
-    document.querySelector("#reset").style.color = "white";
-    document.querySelector("canvas").style.backgroundColor = "grey";
-    document.querySelector("body").style.backgroundColor = "black";
+    let tema =JSON.parse(localStorage.getItem('escuro'));
+    document.querySelector("#reset").style.color = tema.reset;
+    document.querySelector("canvas").style.backgroundColor = tema.canvas;
+        document.querySelector("body").style.backgroundColor = tema.body;
 
   });
 
     document.querySelector("#temaClaro").addEventListener("click", function(){
-    document.querySelector("#reset").style.color = "black";
-    document.querySelector("canvas").style.backgroundColor = "cyan";      document.querySelector("body").style.backgroundColor = "white";
+    let tema = JSON.parse(localStorage.getItem('claro'));
+    document.querySelector("#reset").style.color = tema.reset;
+    document.querySelector("canvas").style.backgroundColor = tema.canvas;
+    document.querySelector("body").style.backgroundColor = tema.body;
   });
 
   document.querySelector("#direita").addEventListener("click", function(){
